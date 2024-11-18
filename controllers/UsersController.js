@@ -1,3 +1,6 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable eol-last */
+/* eslint-disable linebreak-style */
 const { ObjectID } = require('mongodb');
 const sha1 = require('sha1');
 const dbClient = require('../utils/db');

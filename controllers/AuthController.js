@@ -1,3 +1,6 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable eol-last */
+/* eslint-disable linebreak-style */
 const sha1 = require('sha1');
 const { v4: uuid4 } = require('uuid');
 const redisClient = require('../utils/redis');

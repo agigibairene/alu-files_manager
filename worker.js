@@ -1,3 +1,6 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable eol-last */
+/* eslint-disable linebreak-style */
 import Queue from 'bull';
 import imageThumbnail from 'image-thumbnail';
 import { promises as fs } from 'fs';

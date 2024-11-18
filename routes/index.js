@@ -1,4 +1,5 @@
-
+/* eslint-disable linebreak-style */
+/* eslint-disable eol-last */
 const express = require('express');
 
 const router = express.Router();

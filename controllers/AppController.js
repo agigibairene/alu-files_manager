@@ -1,3 +1,6 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable eol-last */
+/* eslint-disable linebreak-style */
 import redisClient from '../utils/redis';
 import dbClient from '../utils/db';
 
