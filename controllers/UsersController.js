@@ -1,42 +1,22 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable eol-last */
-/* eslint-disable linebreak-style */
-import sha1 from 'sha1';
-import DBClient from '../utils/db';
-import RedisClient from '../utils/redis';
+/* eslint-disable linebreak-style */ // Ignore linebreak-style rule for the file
+/* eslint-disable eol-last */       // Ignore missing newline at end of the file
+/* eslint-disable linebreak-style */ // Duplicate rule disabling (can be removed if unnecessary)
 
-const { ObjectId } = require('mongodb');
+import redisClient from '../utils/redis'; // Redis client utility for checking Redis server status
+import dbClient from '../utils/db';       // Database client utility for interacting with the database
 
-class UsersController {
-  static async postNew(request, response) {
-    const userEmail = request.body.email;
-    if (!userEmail) return response.status(400).send({ error: 'Missing email' });
-
-    const userPassword = request.body.password;
-    if (!userPassword) return response.status(400).send({ error: 'Missing password' });
-
-    const oldUserEmail = await DBClient.db.collection('users').findOne({ email: userEmail });
-    if (oldUserEmail) return response.status(400).send({ error: 'Already exist' });
-
-    const shaUserPassword = sha1(userPassword);
-    const result = await DBClient.db.collection('users').insertOne({ email: userEmail, password: shaUserPassword });
-
-    return response.status(201).send({ id: result.insertedId, email: userEmail });
+class AppController {
+  // Responds with the status of Redis and the database
+  static getStatus(request, response) {
+    response.status(200).json({ redis: redisClient.isAlive(), db: dbClient.isAlive() });
   }
 
-  static async getMe(request, response) {
-    const token = request.header('X-Token') || null;
-    if (!token) return response.status(401).send({ error: 'Unauthorized' });
-
-    const redisToken = await RedisClient.get(`auth_${token}`);
-    if (!redisToken) return response.status(401).send({ error: 'Unauthorized' });
-
-    const user = await DBClient.db.collection('users').findOne({ _id: ObjectId(redisToken) });
-    if (!user) return response.status(401).send({ error: 'Unauthorized' });
-    delete user.password;
-
-    return response.status(200).send({ id: user._id, email: user.email });
+  // Responds with statistics: number of users and files in the database
+  static async getStats(request, response) {
+    const usersNum = await dbClient.nbUsers(); // Number of users
+    const filesNum = await dbClient.nbFiles(); // Number of files
+    response.status(200).json({ users: usersNum, files: filesNum });
   }
 }
 
-module.exports = UsersController;
+module.exports = AppController; // Export the AppController class for external use
